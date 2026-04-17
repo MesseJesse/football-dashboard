@@ -1,0 +1,12 @@
+The API returns data that you first convert into a Python dictionary using `data = response.json()`, and inside that dictionary there is a key called `data["matches"]` which contains a list of all the games. You then loop through this list using `for match in data["matches"]`, which gives you one game at a time stored in the variable `match`. For each of these individual games, you pass it into a function called `parse_match(match)`, which takes the full match object and extracts only the information you care about, such as the match ID, home team, away team, goals, and status, and returns a simplified version of that data.
+
+Prometheus is a tool that collects and stores numerical data (called metrics) from applications over time so you can monitor how they change, such as goals scored, active matches, or errors. It works by “scraping” your application at regular intervals, meaning Prometheus goes to a special URL (usually `/metrics`) exposed by your program and pulls the latest values, then stores them in its own database so they can be graphed or used for alerts later. Instead of showing structured objects like your Python script, Prometheus expects simple lines of text in a format like `metric_name{labels} value`, for example: `football_home_goals{match_id="537785",home_team="Liverpool FC"} 4` and `football_away_goals{match_id="537785",away_team="AFC Bournemouth"} 2`, where each line is a single number tied to labels that describe what that number belongs to.
+
+Your Python app (localhost:8000/metrics)
+            ↓
+Prometheus scrapes it
+            ↓
+Prometheus stores history
+            ↓
+Grafana visualises it (later)
+

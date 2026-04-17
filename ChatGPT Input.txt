@@ -1,0 +1,107 @@
+I'm working on a project to improve my knowledge of python, docker, kubernetes, prometheus, grafana. The goal is to create live football dashboard that displays real-time statistics from football matches, such as goals, shots, possession etc. I am using an API with Football-Data.org to pull the data.
+
+Currently I'm at the stage of having a basic python file that successfully pulls some very simple test data from the website.
+
+import requests
+
+API_KEY = "aa5c9232acdc45c0955c38f9dd629599"  # replace with your real API key
+HEADERS = {"X-Auth-Token": API_KEY}
+BASE_URL = "https://api.football-data.org/v4"
+
+response = requests.get(f"{BASE_URL}/competitions/PL/matches", headers=HEADERS)
+
+if response.status_code == 200:
+    data = response.json()
+    if response.status_code == 200:
+        data = response.json()
+
+        for match in data["matches"][:5]:  # first 5 matches
+            home = match["homeTeam"]["name"]
+            away = match["awayTeam"]["name"]
+            goals = match["score"]["fullTime"]
+            print(f"{home} vs {away} -> Full-time: {goals['home']} - {goals['away']}")
+else:
+    print("Error:", response.status_code, response.text)
+
+Now I'm ready to advance this step and pull more meaningful data and parse the JSON, then proceeding to create a python "exporter" to convert parsed statistics to prometheus metrics 
+
+
+*CURRENT**
+
+Here’s a clean summary you can paste next time to continue exactly where you left off.
+
+🧠 Football Dashboard Project — Progress Summary
+✅ What I have built so far
+
+I built a Python project that:
+
+Calls the Football-Data.org API to fetch Premier League match data
+Parses raw JSON into clean match objects using parse_match()
+Extracts key fields: match_id, home_team, away_team, home_goals, away_goals, status
+Handles missing values safely (None → 0 fix)
+Runs a continuous loop to refresh data every 30 seconds
+Exposes a local HTTP endpoint at http://localhost:8000/metrics using prometheus_client
+Converts match data into Prometheus metrics:
+football_home_goals
+football_away_goals
+Adds labels per match (match_id, home_team, away_team)
+📊 Current system architecture
+Football-Data API
+        ↓
+Python script (parsing + cleaning)
+        ↓
+Prometheus metrics endpoint (/metrics on localhost:8000)
+        ↓
+Prometheus scrapes this endpoint (not fully configured yet)
+        ↓
+Grafana (not started yet)
+⚙️ What is already working
+API integration working
+Data parsing working
+Metrics generation working
+Local metrics endpoint working
+Error fixed for None values in goals
+Continuous update loop running
+🚧 Current stage (where I stopped)
+
+I have NOT fully completed integration with:
+
+Prometheus server configuration
+Metrics scraping setup (prometheus.yml)
+Data visualization in Grafana
+🎯 Next immediate steps (when I continue)
+STEP 6 completion (Prometheus setup)
+Install Prometheus locally
+Create prometheus.yml
+Configure scrape target:
+localhost:8000
+Run Prometheus server
+Confirm metrics appear in:
+http://localhost:9090
+STEP 7 (First real monitoring test)
+Query metrics inside Prometheus UI
+Confirm:
+football_home_goals updates over time
+labels are visible per match
+STEP 8 (Grafana introduction)
+Install Grafana
+Connect Prometheus as a data source
+Build first dashboard:
+Goals per match
+Live match overview
+🧠 Key concepts learned
+API → JSON → Python parsing
+Dictionary vs list structure in API responses
+Looping through structured data
+Data transformation (raw → clean model)
+Prometheus metrics model:
+metric_name + labels + value
+Converting script into a “service” using /metrics
+Handling missing API values safely
+🚀 Resume instruction for next time
+
+When I return, I should say:
+
+“Continue Step 6 from Prometheus setup — I already have Python exporter running on localhost:8000/metrics”
+
+If you want next time, we’ll move straight into making your first live Grafana dashboard with real football data.
